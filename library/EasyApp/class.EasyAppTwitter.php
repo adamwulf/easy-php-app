@@ -38,6 +38,22 @@ class EasyAppTwitter{
 		$reply = $this->cb->account_verifyCredentials();
 		return $reply;
 	}
+	
+	public function followersFor($username){
+		$next_cursor = -1; 
+		$output = array();
+	    while ($next_cursor) {  
+	        $results = (array) $this->cb->followers_list(array("screen_name"=>$username,"count"=>50,"cursor"=>$next_cursor));
+	        if(!isset($results['errors'])){
+	            foreach($results['users'] as $id){
+	                $output[]=$id;
+                }
+				$next_cursor = $results['next_cursor_str'];
+            }
+	        break;
+        }
+		return $output;
+	}
 }
 
 
