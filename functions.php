@@ -23,7 +23,7 @@ function gen_uuid() {
 }
 
 function page_self_url(){
-	$url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	$url = 'http' . ($_SERVER["HTTPS"] == "on" ? "s" : "") . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if(strpos($url, "?") !== false){
 		$url = substr($url, 0, strpos($url, "?"));
 	}
@@ -31,6 +31,10 @@ function page_self_url(){
 		$url .= "/";
 	}
 	return $url;
+}
+
+function prettyPrint($obj){
+	echo str_replace("  ", " &nbsp;\n", str_replace("\n", "<br>\n", print_r($obj,true)));
 }
 
 ?>
