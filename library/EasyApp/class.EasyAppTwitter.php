@@ -39,9 +39,30 @@ class EasyAppTwitter{
 		return $reply;
 	}
 	
+	// returns list of users that are following
+	// the input user
 	public function followersFor($username, $next_cursor=-1){
 		$output = array();
         $results = (array) $this->cb->followers_list(array("screen_name"=>$username,"count"=>200,"cursor"=>$next_cursor,"skip_status" => true));
+        if(!isset($results['errors'])){
+            foreach($results['users'] as $id){
+                $output[]=$id;
+            }
+			$next_cursor = $results['next_cursor_str'];
+			if($next_cursor){
+				$output["next_cursor"] = $next_cursor;
+			}
+        }else{
+            $next_cursor = false;
+            $output["error"] = $results['errors'][0];
+        }
+		return $output;
+	}
+	
+	// return list of users the input user is following
+	public function followingFor($username, $next_cursor=-1){
+		$output = array();
+        $results = (array) $this->cb->friends_list(array("screen_name"=>$username,"count"=>200,"cursor"=>$next_cursor,"skip_status" => true));
         if(!isset($results['errors'])){
             foreach($results['users'] as $id){
                 $output[]=$id;
